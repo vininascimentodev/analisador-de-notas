@@ -1,57 +1,60 @@
-def main():
+import tkinter as tk
+from tkinter import messagebox
 
-    print("--------- Analisador de Notas ---------")
-    print(" ")
+lista_alunos = []
 
-    lista_alunos = []
+def cadastrar_aluno():
+    nome = entry_nome.get()
+    matricula = entry_matricula.get()
+    n1 = float(entry_n1.get())
+    n2 = float(entry_n2.get())
 
-    while True:
-        nome = input("Informe o nome do aluno (ou 'sair' para encerrar): ")
+    media = (n1 + n2) / 2
 
-        if nome.lower() == 'sair':
-            break
+    aluno = {
+        "nome": nome,
+        "matricula": matricula,
+        "n1": n1,
+        "n2": n2,
+        "media": media
+    }
 
-        matricula = int(input("Informe a matrícula do aluno: "))
-        n1 = float(input("Informe a primeira nota: "))
-        n2 = float(input("Informe a segunda nota: "))
+    lista_alunos.append(aluno)
+    messagebox.showinfo("Sucesso", "Aluno cadastrado!")
 
-        media = (n1 + n2) / 2
-
-        aluno = {
-            "nome": nome,
-            "matricula": matricula,
-            "n1": n1,
-            "n2": n2,
-            "media" : media
-        }
-
-        lista_alunos.append(aluno)
-        print("Aluno cadastrado com sucesso!")
-        final = input("Deseja cadastrar outro aluno?: ")
-        if final.lower() != "n":
-            print("Cadastro de alunos finalizado!")
-            break
-
-    print("--------- Relatório de Notas ---------")
-    print(" ")
-
-    for aluno in lista_alunos:   
+def mostrar_relatorio():
+    relatorio = ""
+    for aluno in lista_alunos:
         status = "Aprovado" if aluno["media"] >= 7 else "Reprovado"
-        print(f"Aluno: {aluno['nome']} | {aluno['matricula']} | {aluno['n1']} | {aluno['n2']} | Média: {aluno['media']:.2f} | Status: {status}")
+        relatorio += f"{aluno['nome']} - Média: {aluno['media']:.2f} - {status}\n"
 
-while True:
-    main()
+    messagebox.showinfo("Relatório", relatorio)
 
-    while True:
-        resposta = input("Reiniciar programa?: ").lower().strip()
+# janela pra ver as coisas
+janela = tk.Tk()
+janela.title("Sistema de Notas")
+janela.geometry("400x300")
 
-        if resposta in ["s", "sim"]:
-            print("Reiniciando o programa...")
-            break 
+# campos pra pessoa preencher
+tk.Label(janela, text="Nome").pack()
+entry_nome = tk.Entry(janela)
+entry_nome.pack()
 
-        elif resposta in ["n", "nao", "não"]:
-            print("Finalizando o programa. Até mais!")
-            exit()
+tk.Label(janela, text="Matrícula").pack()
+entry_matricula = tk.Entry(janela)
+entry_matricula.pack()
 
-        else:
-            print("Resposta inválida.")
+tk.Label(janela, text="Nota 1").pack()
+entry_n1 = tk.Entry(janela)
+entry_n1.pack()
+
+tk.Label(janela, text="Nota 2").pack()
+entry_n2 = tk.Entry(janela)
+entry_n2.pack()
+
+# butão
+tk.Button(janela, text="Cadastrar", command=cadastrar_aluno).pack(pady=5)
+tk.Button(janela, text="Ver Relatório", command=mostrar_relatorio).pack(pady=5)
+tk.Button(janela, text="Sair", command=janela.quit).pack(pady=5)
+
+janela.mainloop() 
